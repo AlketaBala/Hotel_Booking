@@ -8,7 +8,7 @@ app.use (express.urlencoded({extended:true}))
 app.use(cors());
 
 app.get("/api/test",async (req:Request,res:Response)=>{
-    res.json({message:"Hello from express endpoint!"});
+    res.json({message:"Shiko a punon express!"});
 });
 
 app.listen (7000,()=>{
