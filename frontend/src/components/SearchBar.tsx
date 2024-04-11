@@ -5,7 +5,7 @@ interface SearchBarProps {
   onSearch: (query: string) => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ data, onSearch }) => {
+const SearchBar: React.FC<SearchBarProps> = ({onSearch }) => {
   const [query, setQuery] = useState<string>('');
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
