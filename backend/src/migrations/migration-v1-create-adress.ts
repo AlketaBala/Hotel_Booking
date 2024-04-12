@@ -8,7 +8,7 @@ const up = async (): Promise<void> => {
 
   const User = mongoose.model('User', new mongoose.Schema({}, { strict: false, collection: 'users' }));
 
-  await User.collection.updateMany({}, { $set: { address: null } });
+  await User.collection.updateMany({}, { $set: { address: {} } });
 
   await mongoose.connection.close();
 };
