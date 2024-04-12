@@ -26,9 +26,9 @@ const Register = () => {
 
   return (
     <form className="flex flex-col gap-5" onSubmit={onSubmit}>
-      <h2 className="text-3xl font-bold">Create an Account</h2>
+      <h2 className="text-3xl font-bold"> Create an Account</h2>
       <div className="flex flex-col md:flex-row gap-5">
-        <label className="text-gray-700 text-sm font-bold flex-1">
+        <label className="text-grey-700 text-sm font-bold flex-1">
           First Name
           <input
             className="border rounded w-full py-1 px-2 font-normal"

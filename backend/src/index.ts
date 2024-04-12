@@ -1,8 +1,9 @@
-import express, {Request,Response} from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import "dotenv/config";
 import mongoose from "mongoose";
-import userRoutes from ".//routes/users";
+mongoose.set('strictQuery', true); // Add this line
+import userRoutes from "./routes/users";
 import authRoutes from "./routes/auth";
 
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string)
