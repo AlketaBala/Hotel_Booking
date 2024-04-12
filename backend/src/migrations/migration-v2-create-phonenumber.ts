@@ -26,3 +26,16 @@ const up = async (): Promise<void> => {
 
   await mongoose.connection.close();
 };
+const down = async (): Promise<void> => {
+  await mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+
+  await mongoose.model('User', new mongoose.Schema({}, { strict: false, collection: 'users' })).deleteMany({});
+  await mongoose.connection.collection('users').dropIndex('email_1');
+
+  await mongoose.connection.close();
+};
+
+export { up, down };
