@@ -1,49 +1,31 @@
 # Hotel_Booking
 
-## Pershkrimi i Projektit
+## Përshkrimi i Projektit
 
-Platforma e rezervimeve hoteliere është një web aplikacion që lejon përdoruesit të shikojne hotelet në destinacionet e tyre të preferuara, të kryejnë rezervime dhe të menaxhojnë akomodimet e tyre. 
-
-## Implementimi i ORM dhe Migrimeve të Bazës së të Dhënave
-
-Ky projekt përdor MongoDB si bazë të të dhënave dhe implementon një sistem ORM (Object-Relational Mapping) për të manipuluar dhe menaxhuar të dhënat. Këtu do të dokumentojmë procesin e zhvillimit dhe vendimet kyçe të marra gjatë këtij procesi.
-
-Teknologjitë e Përdorura
-Baza e të Dhënave: MongoDB
-Përzgjedhëm MongoDB për shkak të fleksibilitetit të tij dhe aftësisë për të punuar me dokumente të shumta në një koleksion.
-
-ORM: Mongoose
-Përzgjedhëm Mongoose sepse është një mjet modelimi objekti për MongoDB i projektuar për të punuar në një mjedis asinkron si Node.js. Ai ofron një zgjidhje të drejtpërdrejtë, bazuar në shkema për të modeluar të dhënat dhe për të ndërvepruar me bazën e të dhënave.
-
-Migrime
-Ne nuk kemi përdorur ndonjë librari specifike për migrimet për Mongoose, pasi ka opsione të kufizuara të disponueshme. Në vend të kësaj, kemi krijuar skripta për të menaxhuar migrimet. Kemi krijuar skripta të ndara për të bërë update skemat dhe për të modifikuar të dhënat.
-
-Skriptat e Migrimit
-Ne kemi krijuar skriptat e migrimit të mëposhtme:
-
-migration-v1-createadress.ts: Ky migrim krijon një fushë adresë në koleksionin e përdoruesve.
-migration-v2-createphonehumber.ts: Ky migrim krijon një fushë numër telefoni në koleksionin e përdoruesve.
-migration-v3-createdescription.ts: Ky migrim krijon një fushë përshkrim në koleksionin e hoteleve.
-migration-v4-addrating.ts: Ky migrim krijon një fushë vlerësimi në koleksionin e hoteleve.
-
-Për shembull, nëse dëshironjme të ekzekutojm skripten e migrimit të dytë, përdorim komandën e mëposhtme:
-
-```bash
-npx ts-node src/migrations/migration-v2-createphonehumber.ts
-```
-
-Skripta e migrimit do të lidhet me bazën e të dhënave MongoDB, do të updetojë koleksionin e përdoruesve për të vendosur fushën e numrit të telefonit në null, dhe pastaj do të ndërpritë lidhjen nga baza e të dhënave.
-
-Nëse kemi nevojë për të kthyer prapa migrimin, mund të ekzekutojme funksionin down në të njëjtën mënyrë:
-
-```bash
-npx ts-node src/migrations/migration-v2-createphonehumber.ts down
-```
-
-Kjo do të updetojë koleksionin e përdoruesve për të hequr fushën e numrit të telefonit.
-
-Ky README dokumenton procesin e implementimit të ORM dhe migrimeve të bazës së të dhënave në projektin tonë. Përmes përdorimit të Mongoose dhe migrimeve të bazës së të dhënave, kemi mundësuar një zhvillim të qëndrueshëm dhe fleksibël të aplikacionit tonë.
+Projekti "Hotel Booking" është një aplikacion që lejon përdoruesit të rezervojnë dhoma hoteli online. Ai përfshin një ndërfaqe për përdoruesit ku ata mund të kërkojnë hotele, të shikojnë detaje për dhomat e disponueshme dhe të bëjnë rezervime. Administratori i sistemit mund të menaxhojë hotelet, dhomat dhe rezervimet përmes një paneli administrativ. Teknologjitë kryesore të përdorura për zhvillimin e këtij projekti janë  (MongoDB, Express.js, React dhe Node.js), Cloudinary për menaxhimin e imazheve dhe Stripe për përpunimin e pagesave.
 
 
+## Parakushtet
+Përpara se të filloni, sigurohuni që të keni Node.js të instaluar në sistemin tuaj.
 
+## Klonimi i  Repositorit:
+git clone https://github.com/AlketaBala/Hotel_Booking.git
+cd Hotel_Booking
 
+## Ekzekutimi i aplikacionit 
+Backend:
+
+Navigoni tek backend-i.
+Instaloni : instaloni npm.
+Nis serverin: npm start.
+
+Frontend :
+Hapni një terminal të ri dhe navigoni tek frontendi.
+Instaloni: instaloni npm.
+Nisni aplikacionin frontend: npm ekzekutoni dev.
+Aplikacioni tani duhet të funksionojë në http://localhost:5173, por verifikojeni këtë në terminalin e linjës së komandës.
+
+## Kontributi
+Kontributet janë të mirëpritura! 
+Nëse dëshironi të kontribuoni në këtë projekt, ju lutemi ndiqni këto udhëzime:
+Bëni Fork këtë repozitor në llogarinë tuaj GitHub dhe klononi atë në local machine-en e juaj. Krijoni një degë të re për ndryshimet tuaja duke përdorur komandën git checkout -b your-branch-name. Bëni ndryshimet tuaja në kod dhe kryejini ato duke përdorur komandën git commit -m "mesazhi juaj commit". Shtyni ndryshimet tuaja në fork repositoy duke përdorur komandën git push origin your-branch-name. Krijoni një kërkesë tërheqjeje në këtë repository dhe prisni që mirëmbajtësit të shqyrtojnë ndryshimet tuaja.
