@@ -20,6 +20,7 @@ Instaloni : instaloni npm.
 Nis serverin: npm start.
 
 Frontend :
+
 Hapni një terminal të ri dhe navigoni tek frontendi.
 Instaloni: instaloni npm.
 Nisni aplikacionin frontend: npm ekzekutoni dev.
