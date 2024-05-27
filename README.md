@@ -2,14 +2,15 @@
 
 ## Përshkrimi i Projektit
 
-Projekti "Hotel Booking" është një aplikacion që lejon përdoruesit të rezervojnë dhoma hoteli online. Ai përfshin një ndërfaqe për përdoruesit ku ata mund të kërkojnë hotele, të shikojnë detaje për dhomat e disponueshme dhe të bëjnë rezervime. Administratori i sistemit mund të menaxhojë hotelet, dhomat dhe rezervimet përmes një paneli administrativ. Teknologjitë kryesore të përdorura për zhvillimin e këtij projekti janë  (MongoDB, Express.js, React dhe Node.js), Cloudinary për menaxhimin e imazheve dhe Stripe për përpunimin e pagesave.
+Projekti "Hotel Booking" është një aplikacion që lejon përdoruesit të rezervojnë dhoma hoteli online. Ai përfshin një ndërfaqe për përdoruesit ku ata mund të kërkojnë hotele, të shikojnë detaje për dhomat e disponueshme dhe të bëjnë rezervime.Teknologjitë kryesore të përdorura për zhvillimin e këtij projekti janë  (MongoDB, Express.js, React dhe Node.js), Cloudinary për menaxhimin e imazheve dhe Stripe për përpunimin e pagesave.
 
 
 ## Parakushtet
 Përpara se të filloni, sigurohuni që të keni Node.js të instaluar në sistemin tuaj.
 
-## Klonimi i  Repositorit:
+## Instalimi:
 git clone https://github.com/AlketaBala/Hotel_Booking.git
+Bëni edit file .env dhe vendos të dhënat: MONGO_URI=<url_juaj_e_mongodb>
 cd Hotel_Booking
 
 ## Ekzekutimi i aplikacionit 
