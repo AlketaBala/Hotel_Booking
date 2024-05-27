@@ -111,7 +111,7 @@ const mutation = useMutation(apiClient.register, {
       <span>
         <button
           type="submit"
-          className="bg-blue-600 text-white p-2 font-bold hover:bg-blue-500 text-xl"
+          className="bg-green-600 text-white p-2 font-bold hover:bg-green-500 text-xl"
         >
           Create Account
         </button>
