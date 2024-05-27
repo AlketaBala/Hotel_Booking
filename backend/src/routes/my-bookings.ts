@@ -5,7 +5,25 @@ import { HotelType } from "../shared/types";
 
 const router = express.Router();
 
-// /api/my-bookings
+/**
+ * @swagger
+ * /api/my-bookings:
+ *   get:
+ *     summary: Get all bookings for the authenticated user
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: A list of user bookings
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Hotel'
+ *       '500':
+ *         description: Unable to fetch bookings
+ */
 router.get("/", verifyToken, async (req: Request, res: Response) => {
   try {
     const hotels = await Hotel.find({

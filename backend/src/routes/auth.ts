@@ -3,9 +3,43 @@ import { check, validationResult } from "express-validator";
 import User from "../models/user";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import verifyToken from "../middleware/auth";
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Login a user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: maltine.rama@example.com
+ *               password:
+ *                 type: string
+ *                 example: password123
+ *     responses:
+ *       '200':
+ *         description: User logged in successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 userId:
+ *                   type: string
+ *       '400':
+ *         description: Invalid credentials or validation errors
+ *       '500':
+ *         description: Something went wrong
+ */
 router.post(
   "/login",
   [
@@ -53,8 +87,45 @@ router.post(
     }
   }
 );
+
+/**
+ * @swagger
+ * /api/auth/validate-token:
+ *   get:
+ *     summary: Validate JWT token
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Token is valid
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 userId:
+ *                   type: string
+ *       '401':
+ *         description: Unauthorized
+ */
 router.get("/validate-token", verifyToken, (req: Request, res: Response) => {
-res.status(200).send({userId: req.userId})
+  res.status(200).send({ userId: req.userId });
+});
+
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     summary: Logout a user
+ *     responses:
+ *       '200':
+ *         description: User logged out successfully
+ */
+router.post("/logout", (req: Request, res: Response) => {
+  res.cookie("auth_token", "", {
+    expires: new Date(0),
+  });
+  res.send();
 });
 
 export default router;

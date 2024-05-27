@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import multer from "multer";
 import cloudinary from "cloudinary";
 import Hotel from "../models/hotel";
+import verifyToken from "../middleware/auth";
 import { body } from "express-validator";
 import { HotelType } from "../shared/types";
 
@@ -15,6 +16,49 @@ const upload = multer({
   },
 });
 
+/**
+ * @swagger
+ * /api/hotels:
+ *   post:
+ *     summary: Create a new hotel
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               city:
+ *                 type: string
+ *               country:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               type:
+ *                 type: string
+ *               pricePerNight:
+ *                 type: number
+ *               facilities:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               imageFiles:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *     responses:
+ *       '201':
+ *         description: Hotel created successfully
+ *       '400':
+ *         description: Validation errors
+ *       '500':
+ *         description: Something went wrong
+ */
 router.post(
   "/",
   verifyToken,
@@ -56,6 +100,25 @@ router.post(
   }
 );
 
+/**
+ * @swagger
+ * /api/hotels:
+ *   get:
+ *     summary: Get all hotels for the authenticated user
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: A list of hotels
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Hotel'
+ *       '500':
+ *         description: Error fetching hotels
+ */
 router.get("/", verifyToken, async (req: Request, res: Response) => {
   try {
     const hotels = await Hotel.find({ userId: req.userId });
@@ -65,6 +128,30 @@ router.get("/", verifyToken, async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/hotels/{id}:
+ *   get:
+ *     summary: Get a hotel by ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the hotel
+ *     responses:
+ *       '200':
+ *         description: A hotel
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Hotel'
+ *       '500':
+ *         description: Error fetching hotels
+ */
 router.get("/:id", verifyToken, async (req: Request, res: Response) => {
   const id = req.params.id.toString();
   try {
@@ -78,6 +165,56 @@ router.get("/:id", verifyToken, async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/hotels/{hotelId}:
+ *   put:
+ *     summary: Update a hotel by ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: hotelId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the hotel to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               city:
+ *                 type: string
+ *               country:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               type:
+ *                 type: string
+ *               pricePerNight:
+ *                 type: number
+ *               facilities:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               imageFiles:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *     responses:
+ *       '200':
+ *         description: Hotel updated successfully
+ *       '404':
+ *         description: Hotel not found
+ *       '500':
+ *         description: Something went wrong
+ */
 router.put(
   "/:hotelId",
   verifyToken,
@@ -111,7 +248,7 @@ router.put(
       await hotel.save();
       res.status(201).json(hotel);
     } catch (error) {
-      res.status(500).json({ message: "Something went throw" });
+      res.status(500).json({ message: "Something went wrong" });
     }
   }
 );

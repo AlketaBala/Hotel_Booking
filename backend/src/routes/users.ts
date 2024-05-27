@@ -2,9 +2,85 @@ import express, { Request, Response } from "express";
 import User from "../models/user";
 import jwt from "jsonwebtoken";
 import { check, validationResult } from "express-validator";
+import verifyToken from "../middleware/auth";
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /api/users/me:
+ *   get:
+ *     summary: Get the current user
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: The current user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 firstName:
+ *                   type: string
+ *                 lastName:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *       '400':
+ *         description: User not found
+ *       '500':
+ *         description: Something went wrong
+ */
+router.get("/me", verifyToken, async (req: Request, res: Response) => {
+  const userId = req.userId;
+
+  try {
+    const user = await User.findById(userId).select("-password");
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    res.json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "something went wrong" });
+  }
+});
+
+/**
+ * @swagger
+ * /api/users/register:
+ *   post:
+ *     summary: Register a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *                 example: maltine
+ *               lastName:
+ *                 type: string
+ *                 example: rama
+ *               email:
+ *                 type: string
+ *                 example: maltine.rama@example.com
+ *               password:
+ *                 type: string
+ *                 example: password123
+ *     responses:
+ *       '200':
+ *         description: User registered OK
+ *       '400':
+ *         description: Validation error or user already exists
+ *       '500':
+ *         description: Something went wrong
+ */
 router.post(
   "/register",
   [

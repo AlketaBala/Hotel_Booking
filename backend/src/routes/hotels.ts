@@ -9,6 +9,87 @@ const stripe = new Stripe(process.env.STRIPE_API_KEY as string);
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /api/hotels/search:
+ *   get:
+ *     summary: Search for hotels
+ *     parameters:
+ *       - in: query
+ *         name: destination
+ *         schema:
+ *           type: string
+ *         description: Destination city or country
+ *       - in: query
+ *         name: adultCount
+ *         schema:
+ *           type: number
+ *         description: Number of adults
+ *       - in: query
+ *         name: childCount
+ *         schema:
+ *           type: number
+ *         description: Number of children
+ *       - in: query
+ *         name: facilities
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *         description: List of required facilities
+ *       - in: query
+ *         name: types
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *         description: List of hotel types
+ *       - in: query
+ *         name: stars
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: number
+ *         description: List of star ratings
+ *       - in: query
+ *         name: maxPrice
+ *         schema:
+ *           type: number
+ *         description: Maximum price per night
+ *       - in: query
+ *         name: sortOption
+ *         schema:
+ *           type: string
+ *         description: Sort option (starRating, pricePerNightAsc, pricePerNightDesc)
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: number
+ *         description: Page number for pagination
+ *     responses:
+ *       '200':
+ *         description: A list of hotels
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Hotel'
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: number
+ *                     page:
+ *                       type: number
+ *                     pages:
+ *                       type: number
+ *       '500':
+ *         description: Something went wrong
+ */
 router.get("/search", async (req: Request, res: Response) => {
   try {
     const query = constructSearchQuery(req.query);
@@ -55,6 +136,23 @@ router.get("/search", async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/hotels:
+ *   get:
+ *     summary: Get all hotels
+ *     responses:
+ *       '200':
+ *         description: A list of hotels
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Hotel'
+ *       '500':
+ *         description: Error fetching hotels
+ */
 router.get("/", async (req: Request, res: Response) => {
   try {
     const hotels = await Hotel.find().sort("-lastUpdated");
@@ -65,6 +163,30 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/hotels/{id}:
+ *   get:
+ *     summary: Get a hotel by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The hotel ID
+ *     responses:
+ *       '200':
+ *         description: A hotel
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Hotel'
+ *       '400':
+ *         description: Hotel ID is required
+ *       '500':
+ *         description: Error fetching hotel
+ */
 router.get(
   "/:id",
   [param("id").notEmpty().withMessage("Hotel ID is required")],
@@ -86,6 +208,49 @@ router.get(
   }
 );
 
+/**
+ * @swagger
+ * /api/hotels/{hotelId}/bookings/payment-intent:
+ *   post:
+ *     summary: Create a payment intent for booking a hotel
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: hotelId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The hotel ID
+ *     requestBody:
+ *       description: Number of nights for the booking
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               numberOfNights:
+ *                 type: number
+ *     responses:
+ *       '200':
+ *         description: Payment intent created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 paymentIntentId:
+ *                   type: string
+ *                 clientSecret:
+ *                   type: string
+ *                 totalCost:
+ *                   type: number
+ *       '400':
+ *         description: Hotel not found
+ *       '500':
+ *         description: Error creating payment intent
+ */
 router.post(
   "/:hotelId/bookings/payment-intent",
   verifyToken,
@@ -123,6 +288,38 @@ router.post(
   }
 );
 
+/**
+ * @swagger
+ * /api/hotels/{hotelId}/bookings:
+ *   post:
+ *     summary: Complete a booking for a hotel
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: hotelId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The hotel ID
+ *     requestBody:
+ *       description: Booking details and payment intent ID
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               paymentIntentId:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: Booking completed successfully
+ *       '400':
+ *         description: Hotel not found, payment intent not found or mismatch, or payment intent not succeeded
+ *       '500':
+ *         description: Something went wrong
+ */
 router.post(
   "/:hotelId/bookings",
   verifyToken,
@@ -135,19 +332,19 @@ router.post(
       );
 
       if (!paymentIntent) {
-        return res.status(400).json({ message: "payment intent not found" });
+        return res.status(400).json({ message: "Payment intent not found" });
       }
 
       if (
         paymentIntent.metadata.hotelId !== req.params.hotelId ||
         paymentIntent.metadata.userId !== req.userId
       ) {
-        return res.status(400).json({ message: "payment intent mismatch" });
+        return res.status(400).json({ message: "Payment intent mismatch" });
       }
 
       if (paymentIntent.status !== "succeeded") {
         return res.status(400).json({
-          message: `payment intent not succeeded. Status: ${paymentIntent.status}`,
+          message: `Payment intent not succeeded. Status: ${paymentIntent.status}`,
         });
       }
 
@@ -164,14 +361,14 @@ router.post(
       );
 
       if (!hotel) {
-        return res.status(400).json({ message: "hotel not found" });
+        return res.status(400).json({ message: "Hotel not found" });
       }
 
       await hotel.save();
       res.status(200).send();
     } catch (error) {
       console.log(error);
-      res.status(500).json({ message: "something went wrong" });
+      res.status(500).json({ message: "Something went wrong" });
     }
   }
 );
