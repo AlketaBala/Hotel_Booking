@@ -1,4 +1,4 @@
-type Props = {
+3type Props = {
   selectedStars: string[];
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
