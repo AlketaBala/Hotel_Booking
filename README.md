@@ -1,3 +1,4 @@
+
 # Hotel_Booking
 
 ## Përshkrimi i Projektit
@@ -33,3 +34,4 @@ Aplikacioni tani duhet të funksionojë në http://localhost:5173, por verifikoj
 Kontributet janë të mirëpritura! 
 Nëse dëshironi të kontribuoni në këtë projekt, ju lutemi ndiqni këto udhëzime:
 Bëni Fork këtë repozitor në llogarinë tuaj GitHub dhe klononi atë në local machine-en e juaj. Krijoni një degë të re për ndryshimet tuaja duke përdorur komandën git checkout -b your-branch-name. Bëni ndryshimet tuaja në kod dhe kryejini ato duke përdorur komandën git commit -m "mesazhi juaj commit". Shtyni ndryshimet tuaja në fork repositoy duke përdorur komandën git push origin your-branch-name. Krijoni një kërkesë tërheqjeje në këtë repository dhe prisni që mirëmbajtësit të shqyrtojnë ndryshimet tuaja.
+
