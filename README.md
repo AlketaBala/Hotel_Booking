@@ -10,7 +10,9 @@ Përpara se të filloni, sigurohuni që të keni Node.js të instaluar në siste
 
 ## Instalimi:
 git clone https://github.com/AlketaBala/Hotel_Booking.git
+
 Bëni edit file .env dhe vendos të dhënat: MONGO_URI=<url_juaj_e_mongodb>
+
 cd Hotel_Booking
 
 ## Ekzekutimi i aplikacionit 
